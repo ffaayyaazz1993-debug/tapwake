@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TapWake</string>
+    <string name="accessibility_description">Let the volume keys wake the screen when it is off. TapWake only reacts to volume up or down while the screen is dark.</string>
+</resources>
