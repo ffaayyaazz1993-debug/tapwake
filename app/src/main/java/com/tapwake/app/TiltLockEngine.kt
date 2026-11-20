@@ -90,7 +90,7 @@ class TiltLockEngine(
         val now = SystemClock.elapsedRealtime()
 
         val lockTilt = 90f - lockAngleDegrees
-        val uprightZone = minOf(85f, lockTilt + UPRIGHT_MARGIN)
+        val uprightZone = minOf(85f, maxOf(65f, lockTilt + UPRIGHT_MARGIN))
 
         if (tilt >= uprightZone) {
             wasUpright = true
@@ -122,6 +122,6 @@ class TiltLockEngine(
 
         const val MIN_LOCK_ANGLE = 10f
         const val MAX_LOCK_ANGLE = 80f
-        const val DEFAULT_LOCK_ANGLE = 30f
+        const val DEFAULT_LOCK_ANGLE = 50f
     }
 }

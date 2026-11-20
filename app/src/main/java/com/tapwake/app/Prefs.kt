@@ -133,7 +133,7 @@ object Prefs {
 
     /** Degrees leaned back from upright that triggers the lock. */
     fun getTiltLockAngle(context: Context): Float =
-        prefs(context).getFloat(KEY_TILT_LOCK_ANGLE, 30f)
+        prefs(context).getFloat(KEY_TILT_LOCK_ANGLE, 50f)
 
     fun setTiltLockAngle(context: Context, value: Float) {
         prefs(context).edit().putFloat(KEY_TILT_LOCK_ANGLE, value).apply()
