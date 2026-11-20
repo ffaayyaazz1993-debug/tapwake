@@ -17,6 +17,8 @@ object Prefs {
     const val KEY_AIR_WAVE_ENABLED = "air_wave_enabled"
     const val KEY_AIR_WAVE_SENSITIVITY = "air_wave_sensitivity"
     const val KEY_AIR_WAVE_MIGRATED = "air_wave_migrated"
+    const val KEY_TILT_LOCK_ENABLED = "tilt_lock_enabled"
+    const val KEY_TILT_LOCK_ANGLE = "tilt_lock_angle"
 
     fun isEnabled(context: Context): Boolean =
         prefs(context).getBoolean(KEY_ENABLED, true)
@@ -119,6 +121,22 @@ object Prefs {
 
     fun setAirWaveSensitivity(context: Context, value: Float) {
         prefs(context).edit().putFloat(KEY_AIR_WAVE_SENSITIVITY, value).apply()
+    }
+
+    /** Lean back past an angle (from upright) to lock the screen; off by default. */
+    fun isTiltLockEnabled(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_TILT_LOCK_ENABLED, false)
+
+    fun setTiltLockEnabled(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_TILT_LOCK_ENABLED, value).apply()
+    }
+
+    /** Degrees leaned back from upright that triggers the lock. */
+    fun getTiltLockAngle(context: Context): Float =
+        prefs(context).getFloat(KEY_TILT_LOCK_ANGLE, 30f)
+
+    fun setTiltLockAngle(context: Context, value: Float) {
+        prefs(context).edit().putFloat(KEY_TILT_LOCK_ANGLE, value).apply()
     }
 
     private fun prefs(context: Context) =

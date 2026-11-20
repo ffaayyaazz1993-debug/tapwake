@@ -88,6 +88,8 @@ private fun HomeScreen(canOverlay: Boolean, volumeAccessEnabled: Boolean) {
     var shakeSensitivity by remember { mutableStateOf(Prefs.getShakeSensitivity(context)) }
     var airWave by remember { mutableStateOf(Prefs.isAirWaveEnabled(context)) }
     var airSensitivity by remember { mutableStateOf(Prefs.getAirWaveSensitivity(context)) }
+    var tiltLock by remember { mutableStateOf(Prefs.isTiltLockEnabled(context)) }
+    var tiltLockAngle by remember { mutableStateOf(Prefs.getTiltLockAngle(context)) }
     var airDebug by remember { mutableStateOf("") }
 
     LaunchedEffect(airWave) {
@@ -327,6 +329,53 @@ private fun HomeScreen(canOverlay: Boolean, volumeAccessEnabled: Boolean) {
                 Prefs.setChargerWakeEnabled(context, value)
             }
         )
+
+        ToggleRow(
+            title = "Lean back to lock",
+            subtitle = "After holding it upright, lean the phone back past the angle to lock the screen",
+            checked = tiltLock,
+            onChange = { value ->
+                tiltLock = value
+                Prefs.setTiltLockEnabled(context, value)
+                VolumeKeyAccessibilityService.refreshTiltLock()
+                if (value && !volumeAccessEnabled) openAccessibilitySettings(context)
+            }
+        )
+
+        if (tiltLock) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Text(
+                    "Lock when leaned back: ${tiltLockAngle.roundToInt()} deg from upright",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Slider(
+                    value = tiltLockAngle,
+                    onValueChange = { value ->
+                        tiltLockAngle = value
+                        Prefs.setTiltLockAngle(context, value)
+                    },
+                    onValueChangeFinished = { VolumeKeyAccessibilityService.refreshTiltLock() },
+                    valueRange = 10f..80f,
+                    steps = 13
+                )
+                Text(
+                    "The opposite of pick-up-to-wake: lean it back this far and it locks. " +
+                        "Locking uses the accessibility service.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (!volumeAccessEnabled) {
+                    Spacer(Modifier.height(8.dp))
+                    Button(onClick = { openAccessibilitySettings(context) }) {
+                        Text("Enable accessibility to allow locking")
+                    }
+                }
+            }
+        }
 
         if (volumeWake && !volumeAccessEnabled) {
             Surface(
